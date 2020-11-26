@@ -3,15 +3,16 @@ from random import randint
 
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtGui import QPainter, QColor
-from PyQt5 import uic
+
+from UI import Ui_Form
 
 ACTIVE_AREA = [500, 500]
 
 
-class MainForm(QMainWindow):
+class MainForm(QMainWindow, Ui_Form):
     def __init__(self):
         super().__init__()
-        uic.loadUi('UI.ui', self)
+        self.setupUi(self)
         self.setFixedSize(self.width(), self.height())
         self.widgetName = 'Git и желтые окружности'
         self.setWindowTitle(self.widgetName)  # заголовок виджета
@@ -31,12 +32,13 @@ class MainForm(QMainWindow):
             qp.end()
 
     def draw(self, qp):
-        qp.setBrush(QColor('yellow'))
-        qp.setPen(QColor('orange'))
+        qp.setBrush(QColor(*[int(randint(0, 255)) for _ in range(3)]))
+        qp.setPen(QColor(0, 0, 0))
 
         x, y = randint(20, ACTIVE_AREA[0] - 20), randint(20, ACTIVE_AREA[1] - 20)
         max_size = min([x, y, ACTIVE_AREA[0] - x, ACTIVE_AREA[1] - y])
-        radius = randint(20, max_size if max_size <= ACTIVE_AREA[0] // 8 else ACTIVE_AREA[1] // 8)
+        radius = randint(
+            20, max_size if max_size <= ACTIVE_AREA[0] // 8 else ACTIVE_AREA[1] // 8)
 
         qp.drawEllipse(x - radius, y - radius, radius * 2, radius * 2)
 
